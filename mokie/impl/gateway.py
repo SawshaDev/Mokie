@@ -78,8 +78,8 @@ class RevoltGateway:
 
             try:
                 event = self.dispatcher.event_parsers[event_name.lower()]   
-            except Exception as e:
-                _log.exception(e)
+            except KeyError:
+                self.dispatcher.dispatch(event_name.lower(), payload)
             else:
                 event(payload)
 
