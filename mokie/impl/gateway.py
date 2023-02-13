@@ -56,9 +56,7 @@ class RevoltGateway:
     async def connect(self):
         info = await self.http.get_api_info()
 
-        _log.info(info)
-
-        gateway_url = info["ws"]
+        gateway_url = info.ws
 
         self.ws  = await self.http.session.ws_connect(gateway_url)
 
@@ -75,6 +73,7 @@ class RevoltGateway:
             payload = json.loads(msg.data)
             event_name: str = payload["type"]
 
+            _log.info(event_name)
 
             try:
                 event = self.dispatcher.event_parsers[event_name.lower()]   

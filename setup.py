@@ -13,7 +13,7 @@ if not version:
     raise RuntimeError('version is not set')
 
 version = version[0]
-packages = ["mokie", "mokie.impl"]
+packages = ["mokie", "mokie.impl", "mokie.models"]
 
 
 setup(

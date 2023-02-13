@@ -28,7 +28,7 @@ from typing import Optional, Dict, Any
 
 from urllib.parse import quote as urlquote
 
-from dataclasses import dataclass
+from ..models.instance import InstanceInfo
 
 DEFAULT_API_URL = "https://api.revolt.chat"
 
@@ -56,7 +56,7 @@ class HTTPClient:
 
         self.base_headers = {"User-Agent": "Mokie", "Content-Type": "application/json"}
         self.is_bot = bot
-        self.api_info: Optional[Dict[str, Any]] = None
+        self.api_info: Optional[InstanceInfo] = None
 
     def login(self, token: str):
         self.session = ClientSession()
@@ -77,10 +77,15 @@ class HTTPClient:
 
             return await response.json()
 
-    async def get_api_info(self):
+    async def get_api_info(self) -> InstanceInfo:
         if self.api_info is not None:
             return self.api_info
 
-        self.api_info = await self.request(Route("GET", ""))
+        payload = await self.request(Route("GET", ""))
+
+        self.api_info = InstanceInfo(payload)
 
         return self.api_info
+
+    def fetch_self(self):
+        return self.request(Route("GET", "/users/@me"))
